@@ -21,13 +21,12 @@
  *
  * The new BSD License is applied to this software, see LICENSE.txt
  */
-#include <cstdint>
 #include <iostream>
 #include <fstream>
-#include <all_in_one.hpp>
-#include <random_util.hpp>
+#include <iomanip>
 
 extern "C" {
+#include <stdint.h>
 #include <dc.h>
 }
 
@@ -35,7 +34,7 @@ namespace parallelMT {
    namespace util {
 
       template<typename T>
-	 static void output_params_stream(
+	 static void output_mt_params_stream(
 	       mt_struct& param,
 	       bool first,
 	       std::ostream& ost) {
@@ -107,26 +106,26 @@ namespace parallelMT {
 	 }
 
       template<typename T>
-	 void output_mtgp_params(
+	 void output_mt_params(
 	       mt_struct& param,
 	       const std::string& filename,
 	       bool first = true) {
 
 	    using namespace std;
 
-	    if (!opt.filename.empty()) {
+	    if (!filename.empty()) {
 	       // should check in parse param
 	       ofstream ofs(filename.c_str(), std::ios::out | std::ios::app);
 	       if (ofs) {
 		  try {
-		     output_params_stream<T>(param, first, ofs);
+		     output_mt_params_stream<T>(param, first, ofs);
 		     ofs.close();
 		  } catch (...) {
 		     ofs.close();
 		  }
 	       }
 	    } else {
-	       output_params_stream<T>(param, first, cout);
+	       output_mt_params_stream<T>(param, first, cout);
 	    }
 	 }
 
