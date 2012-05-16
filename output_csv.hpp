@@ -96,10 +96,10 @@ namespace parallelMT {
 	    // init_mul
 	    ost << dec;
 	    if (bit_size == 32) {
-	       ost << "1812433253" << ","; 
+	       ost << "1812433253"; 
 	    }
 	    else {
-	       ost << "6364136223846793005ull" << ","; 
+	       ost << "6364136223846793005ull"; 
 	    }
 
 	    ost << endl;
