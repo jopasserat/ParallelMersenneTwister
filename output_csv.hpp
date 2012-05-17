@@ -54,7 +54,7 @@ namespace parallelMT {
 
 	    if (first) {
 	       ost << "# type, ww, nn, mm, "
-		  << "rr, aaa, shift0, maskD, shiftB, maskB, shiftC,"
+		  << "rr, aaa, shift0, maskD, shiftB, maskB, shiftC, "
 		  << "maskC, shift1, init_mul" << endl;
 	    }
 
