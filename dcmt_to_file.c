@@ -38,12 +38,12 @@ int main(int argc, char* argv[])
  
    mt_struct *mts = NULL;
 
-   mts = get_mt_parameter_st(sizeof(mt_output_t) * 8,19937,4172);
+   mts = get_mt_parameter_st(sizeof(mt_output_t) * 8, mersenneExponent, 4172);
    if (mts == NULL) {
       std::cerr << "error\n" << std::endl;
    }
    else {
-      parallelMT::util::output_mt_params<mt_output_t>(*mts, "mt_params.csv");
+      parallelMT::util::output_mt_params<mt_output_t>(*mts, filename);
       free_mt_struct(mts);
    }
 
