@@ -1,105 +1,81 @@
 #!/usr/bin/awk -f
-# sample awk file to make C table source
+#####
+# Simple awk file to fill-in C++ table source of MT parameters
+# Inspired from Saito & Matsumoto's  fast-param.awk
+#
+# Copyright Jonathan PASSERAT-PALMBACH, 2012
+#####
+
 BEGIN {
     FS=","
     first = 1;
-    count = 0;
+   # count = 0;
 }
 END {
-    printf("\n};\n");
-    printf("const int mtgp%sdc_params_%s_num  = %d;\n", w, mexp, count);
+    printf("\n");
+    printf("\n// end of dynamic part \n");
+    printf("};\n");
 }
 
 /^#/ {next}
 {
     if (first) {
 	first = 0;
-	first_out($2, $3);
+	first_out();
     }
     middle_out();
 }
 
-function first_out(mexp, type,	w, n, i, p) {
-    w = substr(type, 5, 2);
-    n =  int(mexp / w) + 1;
-    p = 2;
-    for (p = 1; p < n; p = p * 2);
-    printf("#include <stdint.h>\n");
-    printf("#include \"mtgp%s-fast.h\"\n", w);
-    printf("#define MTGPDC_MEXP %s\n", mexp);
-    printf("#define MTGPDC_N %s\n", n);
-    printf("#define MTGPDC_FLOOR_2P %s\n", p / 2);
-    printf("#define MTGPDC_CEIL_2P %s\n", p);
-    printf("#define MTGPDC_PARAM_TABLE mtgp%sdc_params_fast_%s\n", w, mexp);
-    printf("\n");
-    printf("mtgp%s_params_fast_t mtgp%sdc_params_fast_%s[]\n = {", w, w, mexp);
-    connect = "\n";
+function first_out() {
+   printf("/*");
+   printf(" *  @file mersenneTwister_instances.hpp\n");
+   printf(" *  \n");
+   printf(" *  Automatically generated file, DO NOT EDIT!\n");
+   printf(" *\n");
+   printf(" *  Created by Jonathan PASSERAT-PALMBACH on 5/16/12.\n");
+   printf(" *  Copyright 2012 ISIMA/LIMOS. All rights reserved.\n");
+   printf(" *\n");
+   printf(" */\n");
+   printf(" \n");
+   printf(" // beginning of constant part\n");
+   printf(" #include <boost/random/mersenne_twister.hpp>\n");
+   printf(" \n");
+   printf(" template <typename T>\n");
+   printf(" struct MTParametersArray {\n");
+   printf("    static ParallelMersenneTwister<T>* generators[];\n");
+   printf(" };\n");
+   printf("\n");
+   printf("\n");
+   printf("template <typename T>\n");
+   printf("ParallelMersenneTwister<T>* MTParametersArray<T>::generators[]  = {\n");
+   printf("// beginning of dynamic part   \n");
+
+   connect = "\n";
 }
 
 function middle_out() {
+    # break previous line
     printf("%s", connect);
-    sha1 = $1;
-    sha1 = substr(sha1, 2);
-    mexp = $2;
-    type = $3;
-    id = $4;
-    pos = $5;
-    sh1 = $6;
-    sh2 = $7;
-    mask = $16;
-    weight = $17;
-    delta = $18;
-    printf("    {\n");
-    printf("        /* No.%s delta:%s weight:%s */\n", id, delta, weight);
-    printf("        %s,\n", mexp);
-    printf("        %s,\n", pos);
-    printf("        %s,\n", sh1);
-    printf("        %s,\n", sh2);
-    printf("        {");
-    if (type == "uint32_t") {
-	fmt = "UINT32_C(%s),\n";
-	fmt2 = "UINT32_C(%s)";
-    } else {
-	fmt = "UINT64_C(%s),\n";
-	fmt2 = "UINT64_C(%s)";
-    }
-    x = 19;
-    for (i = 0; i < 15; i++) {
-	printf(fmt, $(x++));
-	printf("         ");
-    }
-    printf(fmt2, $(x++));
-    printf("},\n");
-    printf("        {");
-    for (i = 0; i < 15; i++) {
-	printf(fmt, $(x++));
-	printf("         ");
-    }
-    printf(fmt2, $(x++));
-    printf("},\n");
-    printf("        {");
-    for (i = 0; i < 15; i++) {
-	printf(fmt, $(x++));
-	printf("         ");
-    }
-    printf(fmt2, $(x++));
-    printf("},\n");
-    printf("        ");
-    printf(fmt, mask);
-    printf("        {");
-    for (i = 0; i < 10; i++) {
-	printf("0x%s,", substr(sha1, 1, 2));
-	sha1 = substr(sha1, 3);
-    }
-    printf("\n");
-    printf("         ");
-    for (i = 0; i < 10; i++) {
-	printf("0x%s,", substr(sha1, 1, 2));
-	sha1 = substr(sha1, 3);
-    }
-    printf("0x00}\n");
-    printf("    }");
+ 
+    type = $1
+    ww = $2
+    nn = $3
+    mm = $4
+    rr = $5
+    aaa = $6
+    shift0 = $7
+    maskD = $8
+    shiftB = $9
+    maskB = $10
+    shiftC = $11
+    maskC = $12
+    shift1 = $13
+    init_mul = $14
+
+    printf("\tnew ParallelMersenneTwister_impl<T, boost::random::mersenne_twister_engine < %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s >()",
+	       type, ww, nn, mm, rr, aaa, shift0, maskD, shiftB, maskB, shiftC, maskC, shift1, init_mul);
+   # prepare next line
     connect = ",\n";
-    count++;
+#    count++;
 }
 
