@@ -18,7 +18,7 @@
 template <typename T>
 struct ParallelMersenneTwister {
    
-   typedef T result_t;
+   typedef T result_type;
    
    virtual T next() = 0;
    virtual T operator()() = 0;
