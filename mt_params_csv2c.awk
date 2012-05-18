@@ -9,12 +9,11 @@
 BEGIN {
     FS=","
     first = 1;
-   # count = 0;
 }
 END {
     printf("\n");
     printf("\n// end of dynamic part \n");
-    printf("};\n");
+    printf("};\n\n");
 }
 
 /^#/ {next}
@@ -27,23 +26,22 @@ END {
 }
 
 function first_out() {
-   printf("/*");
-   printf(" *  @file mersenneTwister_instances.hpp\n");
+   printf("/**  @file mersenneTwister_instances.hpp\n");
    printf(" *  \n");
    printf(" *  Automatically generated file, DO NOT EDIT!\n");
    printf(" *\n");
    printf(" *  Created by Jonathan PASSERAT-PALMBACH on 5/16/12.\n");
    printf(" *  Copyright 2012 ISIMA/LIMOS. All rights reserved.\n");
    printf(" *\n");
-   printf(" */\n");
-   printf(" \n");
-   printf(" // beginning of constant part\n");
-   printf(" #include <boost/random/mersenne_twister.hpp>\n");
-   printf(" \n");
-   printf(" template <typename T>\n");
-   printf(" struct MTParametersArray {\n");
-   printf("    static ParallelMersenneTwister<T>* generators[];\n");
-   printf(" };\n");
+   printf("*/\n");
+   printf("\n");
+   printf("// beginning of constant part\n");
+   printf("#include <boost/random/mersenne_twister.hpp>\n");
+   printf("\n");
+   printf("template <typename T>\n");
+   printf("struct MTParametersArray {\n");
+   printf("   static ParallelMersenneTwister<T>* generators[];\n");
+   printf("};\n");
    printf("\n");
    printf("\n");
    printf("template <typename T>\n");
@@ -72,10 +70,9 @@ function middle_out() {
     shift1 = $13
     init_mul = $14
 
-    printf("\tnew ParallelMersenneTwister_impl<T, boost::random::mersenne_twister_engine < %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s >()",
+    printf("\tnew ParallelMersenneTwister_impl <T, boost::random::mersenne_twister_engine < %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s >()",
 	       type, ww, nn, mm, rr, aaa, shift0, maskD, shiftB, maskB, shiftC, maskC, shift1, init_mul);
    # prepare next line
     connect = ",\n";
-#    count++;
 }
 
