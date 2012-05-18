@@ -33,7 +33,7 @@ function first_out() {
    printf(" *  Created by Jonathan PASSERAT-PALMBACH on 5/16/12.\n");
    printf(" *  Copyright 2012 ISIMA/LIMOS. All rights reserved.\n");
    printf(" *\n");
-   printf("*/\n");
+   printf(" */\n");
    printf("\n");
    printf("// beginning of constant part\n");
    printf("#include <boost/random/mersenne_twister.hpp>\n");
@@ -70,7 +70,7 @@ function middle_out() {
     shift1 = $13
     init_mul = $14
 
-    printf("\tnew ParallelMersenneTwister_impl <T, boost::random::mersenne_twister_engine < %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s >()",
+    printf("\tnew ParallelMersenneTwister_impl < T, boost::random::mersenne_twister_engine < %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s > > ()",
 	       type, ww, nn, mm, rr, aaa, shift0, maskD, shiftB, maskB, shiftC, maskC, shift1, init_mul);
    # prepare next line
     connect = ",\n";
