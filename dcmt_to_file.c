@@ -17,28 +17,30 @@ extern "C" {
 typedef uint32_t mt_output_t;
 
 void usage(const std::string& binaryName) {
-   std::cerr << "Usage:\n\t" << binaryName << " <mersenne exponent> <output file name>" << std::endl;
+   std::cerr << "Usage:\n\t" << binaryName << " <mersenne exponent> <output file name> <id>" << std::endl;
 }
 
 int main(int argc, char* argv[])
 {
-   if (argc != 3) {
+   if (argc != 4) {
       usage(argv[0]);
       exit(1);
    }
    
    int mersenneExponent;
    std::string filename(argv[2]);
+   unsigned int id;
 
    if ( sscanf(argv[1], "%d", &mersenneExponent) != 1 ||
-        filename.empty() ) {
+        filename.empty() ||
+	sscanf(argv[3], "%u", &id) != 1) {
       usage(argv[0]);
       exit(2);
    }
  
    mt_struct *mts = NULL;
 
-   mts = get_mt_parameter_st(sizeof(mt_output_t) * 8, mersenneExponent, 4172);
+   mts = get_mt_parameter_id_st(sizeof(mt_output_t) * 8, mersenneExponent, id, 4172);
    if (mts == NULL) {
       std::cerr << "error\n" << std::endl;
    }
