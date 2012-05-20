@@ -3,7 +3,7 @@
  *  
  *
  *  Created by Jonathan PASSERAT-PALMBACH on 5/15/12 following
- *  Luc TOURAILLE's guidelines.
+ *  Luc TOURAILLE's advice.
  *  Copyright 2012 ISIMA/LIMOS. All rights reserved.
  *
  */
@@ -19,9 +19,12 @@ template <typename T>
 struct ParallelMersenneTwister {
    
    typedef T result_type;
-   
-   virtual T next() = 0;
-   virtual T operator()() = 0;
+      
+   // make it compliant with boost to enable distributions
+   virtual result_type next() = 0;
+   virtual result_type operator()() = 0;
+   virtual result_type min() = 0;
+   virtual result_type max() = 0;
    
 };
 
@@ -41,6 +44,14 @@ public:
    
    T operator()() {
       return gen_();
+   }
+   
+   T min() {
+      return gen_.min();
+   }   
+   
+   T max() {
+      return gen_.max();
    }
 };
 
