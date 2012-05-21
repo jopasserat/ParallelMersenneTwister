@@ -25,9 +25,9 @@ public:
    typedef T result_type;
    
 private:   
-   static idStore_t                       actualIds__;
-   static unsigned int                    idCount__;
-   static boost::mutex                    mutex__;   
+   static idStore_t                       actualIds_;
+   static unsigned int                    idCount_;
+   static boost::mutex                    mutex_;   
 
 public:
    // make it compliant with boost to enable distributions
@@ -82,12 +82,12 @@ ParallelMersenneTwister<T>::ParallelMersenneTwister () {
    boost::thread::id                       threadId = boost::this_thread::get_id();
    
    // entering critical section
-   boost::lock_guard(mutex__);
+   boost::lock_guard(mutex_);
    
    // figure out actual "understandable" Id
-   if ( actualIds__.find(threadId) == 
-       actualIds__.end() ) {
-      actualIds__[threadId] = idCount__++;
+   if ( actualIds_.find(threadId) == 
+       actualIds_.end() ) {
+      actualIds_[threadId] = idCount_++;
    }
 
 } // out of critical section 
@@ -104,22 +104,22 @@ ParallelMersenneTwister<T>* ParallelMersenneTwister<T>::getParallelMersenneTwist
    
    boost::thread::id                       threadId = boost::this_thread::get_id();
    
-   boost::lock_guard(mutex__);
+   boost::lock_guard(mutex_);
    
    
-   return MTParametersArray<T>::generators[ actualIds__[threadId ] ];
+   return MTParametersArray<T>::generators[ actualIds_[threadId ] ];
 }
 
 
 // static members definition
 template <typename T>
-std::map<boost::thread::id, unsigned int>      ParallelMersenneTwister<T>::actualIds__;
+std::map<boost::thread::id, unsigned int>      ParallelMersenneTwister<T>::actualIds_;
 
 template <typename T>
-unsigned int                                   ParallelMersenneTwister<T>::idCount__;
+unsigned int                                   ParallelMersenneTwister<T>::idCount_;
 
 template <typename T>
-boost::mutex                                   ParallelMersenneTwister<T>::mutex__;
+boost::mutex                                   ParallelMersenneTwister<T>::mutex_;
 
 
 #endif // PARALLEL_MERSENNE_TWISTER
