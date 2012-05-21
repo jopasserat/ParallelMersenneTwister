@@ -82,7 +82,7 @@ ParallelMersenneTwister<T>::ParallelMersenneTwister () {
    boost::thread::id                       threadId = boost::this_thread::get_id();
    
    // entering critical section
-   boost::lock_guard(mutex_);
+   boost::lock_guard <boost::mutex> (mutex_);
    
    // figure out actual "understandable" Id
    if ( actualIds_.find(threadId) == 
@@ -104,7 +104,7 @@ ParallelMersenneTwister<T>* ParallelMersenneTwister<T>::getParallelMersenneTwist
    
    boost::thread::id                       threadId = boost::this_thread::get_id();
    
-   boost::lock_guard(mutex_);
+   boost::lock_guard <boost::mutex> (mutex_);
    
    
    return MTParametersArray<T>::generators[ actualIds_[threadId ] ];
