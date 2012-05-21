@@ -82,17 +82,15 @@ ParallelMersenneTwister<T>::ParallelMersenneTwister () {
    boost::thread::id                       threadId = boost::this_thread::get_id();
    
    // entering critical section
-   mutex__.lock();
+   boost::lock_guard(mutex__);
    
    // figure out actual "understandable" Id
    if ( actualIds__.find(threadId) == 
        actualIds__.end() ) {
       actualIds__[threadId] = idCount__++;
    }
-   
-   mutex__.unlock();
-   // out of critical section
-}
+
+} // out of critical section 
 
 
 /** This function enables threads to pick up the independent instance of MT
@@ -104,14 +102,12 @@ ParallelMersenneTwister<T>::ParallelMersenneTwister () {
 template <typename T>
 ParallelMersenneTwister<T>* ParallelMersenneTwister<T>::getParallelMersenneTwister() {
    
-   ParallelMersenneTwister<T>*             gen;
    boost::thread::id                       threadId = boost::this_thread::get_id();
    
-   mutex__.lock();
-   gen = MTParametersArray<T>::generators[ actualIds__[threadId ] ];
-   mutex__.unlock();
+   boost::lock_guard(mutex__);
    
-   return gen;
+   
+   return MTParametersArray<T>::generators[ actualIds__[threadId ] ];
 }
 
 
@@ -127,3 +123,4 @@ boost::mutex                                   ParallelMersenneTwister<T>::mutex
 
 
 #endif // PARALLEL_MERSENNE_TWISTER
+
