@@ -74,7 +74,7 @@ public:
 
 // methods definition
 
-#include <mersenneTwister_instances.hpp>
+#include "mersenneTwister_instances.hpp"
 
 template <typename T>
 ParallelMersenneTwister<T>::ParallelMersenneTwister () {
