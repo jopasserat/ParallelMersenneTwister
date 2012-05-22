@@ -80,9 +80,8 @@ template <typename T>
 ParallelMersenneTwister<T>::ParallelMersenneTwister () {
    
    boost::thread::id                       threadId = boost::this_thread::get_id();
-   
    // entering critical section
-   boost::lock_guard <boost::mutex> (mutex_);
+   boost::lock_guard<boost::mutex> lock(mutex_);
    
    // figure out actual "understandable" Id
    if ( actualIds_.find(threadId) == 
@@ -103,8 +102,7 @@ template <typename T>
 ParallelMersenneTwister<T>* ParallelMersenneTwister<T>::getParallelMersenneTwister() {
    
    boost::thread::id                       threadId = boost::this_thread::get_id();
-   
-   boost::lock_guard <boost::mutex> (mutex_);
+   boost::lock_guard<boost::mutex> lock(mutex_);
    
    
    return MTParametersArray<T>::generators[ actualIds_[threadId ] ];
