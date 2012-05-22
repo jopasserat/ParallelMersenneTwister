@@ -35,9 +35,7 @@ public:
    virtual result_type operator()() = 0;
    virtual result_type min() = 0;
    virtual result_type max() = 0;
-   
-   ParallelMersenneTwister();
-   
+      
    /** static method to get the MT assigned to a particular thread */
    static ParallelMersenneTwister<T>* getParallelMersenneTwister();
    
@@ -76,21 +74,6 @@ public:
 
 #include "mersenneTwister_instances.hpp"
 
-template <typename T>
-ParallelMersenneTwister<T>::ParallelMersenneTwister () {
-   
-   boost::thread::id                       threadId = boost::this_thread::get_id();
-   // entering critical section
-   boost::lock_guard<boost::mutex> lock(mutex_);
-   
-   // figure out actual "understandable" Id
-   if ( actualIds_.find(threadId) == 
-       actualIds_.end() ) {
-      actualIds_[threadId] = idCount_++;
-   }
-
-} // out of critical section 
-
 
 /** This function enables threads to pick up the independent instance of MT
     corresponding to their unique identifier.
@@ -102,11 +85,18 @@ template <typename T>
 ParallelMersenneTwister<T>* ParallelMersenneTwister<T>::getParallelMersenneTwister() {
    
    boost::thread::id                       threadId = boost::this_thread::get_id();
-   boost::lock_guard<boost::mutex> lock(mutex_);
+   boost::lock_guard<boost::mutex>         lock(mutex_);
    
+   // *** entering critical section ***
    
+   // figure out actual "understandable" Id
+   if ( actualIds_.find(threadId) == 
+       actualIds_.end() ) {
+      actualIds_[threadId] = idCount_++;
+   }
+
    return MTParametersArray<T>::generators[ actualIds_[threadId ] ];
-}
+} // *** out of critical section ***
 
 
 // static members definition
@@ -114,7 +104,7 @@ template <typename T>
 std::map<boost::thread::id, unsigned int>      ParallelMersenneTwister<T>::actualIds_;
 
 template <typename T>
-unsigned int                                   ParallelMersenneTwister<T>::idCount_;
+unsigned int                                   ParallelMersenneTwister<T>::idCount_ = 0;
 
 template <typename T>
 boost::mutex                                   ParallelMersenneTwister<T>::mutex_;
