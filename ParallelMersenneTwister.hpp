@@ -21,11 +21,11 @@ template <typename T>
 class ParallelMersenneTwister {
 
 public:
-   typedef std::map<boost::thread::id, unsigned int> idStore_t;
+   typedef std::map<boost::thread::id, unsigned int> idStore_type;
    typedef T result_type;
    
 private:   
-   static idStore_t                       actualIds_;
+   static idStore_type                    actualIds_;
    static unsigned int                    idCount_;
    static boost::mutex                    mutex_;   
 
